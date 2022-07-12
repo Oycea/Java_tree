@@ -48,12 +48,12 @@ public class NodeTest {
         root.addNode(child2);
         root.addNode(child3);
         root.deleteChild(child1.getID());
-        assertEquals(false,root.findChild("Лист2"));
+        assertEquals(false,root.findChild("Лист1"));
     }
 
     @Test
     void deleteAllChilds(){
-        Node root=new Node("Корень");
+        Node root = new Node("Корень");
         Node child1 = new Node("Лист1");
         Node child2 = new Node("Лист2");
         Node child3 = new Node("Лист3");
@@ -79,17 +79,17 @@ public class NodeTest {
 
     @Test
     void checkPrint(){
-        Node root=new Node("Корень");
-        Node child1 = new Node("Лист1");
-        Node child2 = new Node("Лист2");
-        Node child3 = new Node("Лист3");
-        Node child4 = new Node("Лист4");
+        Node root = new Node("Корень");
+        Node child = new Node("Лист1");
+        Node child1 = new Node("Лист2");
+        Node child2 = new Node("Лист3");
+        Node child3 = new Node("Лист4");
+        root.addNode(child);
         root.addNode(child1);
         root.addNode(child2);
-        root.addNode(child3);
-        child1.addNode(child4);
-        String str = root.indentedPrintNode(root,0);
-        assertEquals("Корень\n Лист1\n Лист2\n Лист4\n Лист3\n",str);
+        child1.addNode(child3);
+        String s=root.indentedPrintNode(root,0);
+        assertEquals("Корень\n Лист1\n Лист2\n  Лист4\n Лист3\n",s);
     }
 
     @Test
@@ -122,19 +122,23 @@ public class NodeTest {
     }
 
     @Test
-    void readFromJson() throws JsonProcessingException{
-        String JsonString = "{\n"+
-                "\"name\":\"Корень\",\n"+
-                "\"children\":[{\n"+
-                "\"name\":\"Лист\",\n"+
-                "\"children\":[]\n"+
-                "}]\n"+
+    void ReadFileJSON() throws IOException {
+        Node root = new Node("Корень");
+        Node child = new Node("Лист");
+        root.addNode(child);
+
+        String jsonString = "{\n" +
+                "  \"name\" : \"Корень\",\n" +
+                "  \"child\" : [ {\n" +
+                "    \"name\" : \"Лист\",\n" +
+                "    \"child\" : null\n" +
+                "  } ]\n" +
                 "}";
-        ObjectMapper objectMapper = new ObjectMapper();
-        Node actual = objectMapper.readValue(JsonString, Node.class);
-        assertEquals("Корень",actual.getName());
-        assertEquals(1, actual.getChilds().size());
-        assertEquals("Лист",actual.getChilds().get(0).getName());
+
+        ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        Node treeNew = objectMapper.readValue(jsonString, Node.class);
+
+        assertEquals("Корень\n" + "\tЛист\n", treeNew.toString());
     }
 
 }
