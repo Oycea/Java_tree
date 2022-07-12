@@ -106,10 +106,18 @@ public class Node {
     }
 
     // Печать в файл
-    public void printFile() throws IOException{
+    public void printFile() throws IOException {
         String cnt = indentedPrintNode(this, 0);
         String path = "file.txt";
 
         Files.write(Paths.get(path), cnt.getBytes());
+    }
+
+    public String printToHtml() {
+        String result = "    <ul>";
+        result += "<li>";
+        result += "3";
+        result += "      <li>3";
+        return result;
     }
 }
