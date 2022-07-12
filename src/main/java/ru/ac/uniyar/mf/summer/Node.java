@@ -113,11 +113,25 @@ public class Node {
         Files.write(Paths.get(path), cnt.getBytes());
     }
 
-    public String printToHtml() {
-        String result = "    <ul>";
-        result += "<li>";
-        result += "3";
-        result += "      <li>3";
-        return result;
+    // Метод для преобразования дерева в строку.
+    public String printToHTML() {
+        return "<ul>" + printToHTML(this) + "</ul>";
+    }
+
+    private String printToHTML(Node pos) {
+        if (pos.name == null) {
+            return "";
+        }
+        StringBuilder res = new StringBuilder();
+        res.append("<li>").append(pos.name);
+        if (pos.childs == null) {
+            return res.append("</li>").toString();
+        }
+        res.append("<ul>");
+        for (Node child : pos.childs) {
+            res.append(printToHTML(child));
+        }
+        res.append("</ul>");
+        return res.append("</li>").toString();
     }
 }
