@@ -123,22 +123,17 @@ public class NodeTest {
 
     @Test
     void ReadFileJSON() throws IOException {
-        Node root = new Node("Корень");
-        Node child = new Node("Лист");
-        root.addNode(child);
+        String path = "C:\\Users\\Admin\\IdeaProjects\\tree\\target\\input.json";
 
-        String jsonString = "{\n" +
-                "  \"name\" : \"Корень\",\n" +
-                "  \"child\" : [ {\n" +
-                "    \"name\" : \"Лист\",\n" +
-                "    \"child\" : null\n" +
-                "  } ]\n" +
-                "}";
+        byte[] bytes = Files.readAllBytes(Paths.get(path));
+        String jsonString = new String(bytes);
 
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        Node treeNew = objectMapper.readValue(jsonString, Node.class);
+        Node actual = objectMapper.readValue(jsonString, Node.class);
 
-        assertEquals("Корень\n" + "\tЛист\n", treeNew.toString());
+        assertEquals("Корень", actual.getName());
+        assertEquals(1, actual.getChilds().size());
+        assertEquals("Лист", actual.getChilds().get(0).getName());
     }
 
 }
